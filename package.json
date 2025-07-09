@@ -1,0 +1,22 @@
+{
+  "name": "knowledge-divergence-model",
+  "version": "1.0.0",
+  "description": "Interactive visualization of knowledge-class divergence in the AI era",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cryptojym/knowledge-divergence-model.git"
+  },
+  "keywords": [
+    "AI",
+    "knowledge-gap",
+    "economics",
+    "visualization",
+    "education"
+  ],
+  "author": "cryptojym",
+  "license": "MIT"
+}
