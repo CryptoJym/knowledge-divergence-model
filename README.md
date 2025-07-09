@@ -1,17 +1,18 @@
-# Knowledge-Class Divergence in the AI Era
+# The AI Knowledge Chasm: Evidence-Based Analysis
 
-An interactive visualization demonstrating how knowledge gaps between elite and mass populations are accelerating in the age of AI, even as the unit price of knowledge approaches zero.
+An interactive visualization based on empirical research (2024-2025) showing how AI is creating compound acceleration effects in human inequality, with the top 10% capturing 70% of AI productivity gains.
 
 ## Live Demo
 
 [View the interactive model](https://knowledge-divergence-model.vercel.app)
 
-## Key Findings
+## Key Research Findings (2024-2025)
 
-- **Knowledge Gap Acceleration**: The elite-mass knowledge ratio is projected to more than double from 2025 to 2030
-- **Cognitive Limits**: Elite learning jerk approaches but stays within human adaptability ceiling (0.4 stock/yr³)
-- **Policy Effectiveness**: STEM boot camps show 41% gap reduction potential vs only 9% for compute vouchers
-- **Zero Price Paradox**: Even as AI makes knowledge virtually free, inequality accelerates due to differences in learning velocity, acceleration, and cognitive adaptation
+- **60% Job Impact**: AI affects 60% of jobs in advanced economies, not the 40% commonly cited (IMF 2024)
+- **70% Capture Rate**: Top 10% of earners capture 70% of AI-generated productivity gains
+- **8.7x Investment Gap**: US has 8.7x more AI investment than China, creating massive concentration
+- **Network Effects**: AI adoption creates "AI deserts" where recovery becomes exponentially harder
+- **No Easy Solutions**: Traditional interventions appear insufficient to counter accelerating forces
 
 ## Model Components
 
