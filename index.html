@@ -1465,11 +1465,9 @@
                 },
                 text: industries,
                 textposition: 'top center',
-                hovertemplate: '<b>%{text}</b><br>' +
-                             'AI Adoption: %{x}%<br>' +
-                             'Job Anxiety: %{y}%<br>' +
-                             'Jobs Change: ' + jobChanges.map(v => v > 0 ? '+' + v.toLocaleString() : v.toLocaleString()) +
-                             '<extra></extra>',
+                hovertemplate: industries.map((ind, i) => 
+                    `<b>${ind}</b><br>AI Adoption: %{x}%<br>Job Anxiety: %{y}%<br>Jobs Change: ${jobChanges[i] > 0 ? '+' : ''}${jobChanges[i].toLocaleString()}<extra></extra>`
+                ),
                 hoverlabel: { bgcolor: 'white' }
             };
             
@@ -1557,7 +1555,7 @@
                 margin: { t: 80, r: 50, b: 80, l: 80 }
             };
             
-            Plotly.newPlot('factorsVisualization', [trace1, trace2], layout, {responsive: true});
+            Plotly.newPlot('factorsVisualization', [trace1], layout, {responsive: true});
         }
 
         function plotFuture(aiSpeed, interventionLevel) {
@@ -1766,8 +1764,14 @@
             
             const results = simulateKnowledge(6, { g0: value / 100 });
             
+            // Convert to salaries
+            const baseSalary = 50000;
+            const eliteSalaries = results.KH.map(k => baseSalary * Math.pow(k, 1.5));
+            const massSalaries = results.KL.map(k => baseSalary * Math.pow(k, 0.8));
+            const salaryGap = eliteSalaries.map((e, i) => e / massSalaries[i]);
+            
             Plotly.restyle('mainVisualization', {
-                y: [results.KH, results.KL, results.gap]
+                y: [eliteSalaries, massSalaries, salaryGap]
             });
         }
 
