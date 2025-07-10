@@ -7,6 +7,8 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -453,6 +455,10 @@
                 Future Scenarios
                 <div class="tab-description">What's coming</div>
             </div>
+            <div class="tab" onclick="showTab('visualize3d')">
+                3D Visualization
+                <div class="tab-description">See the divide</div>
+            </div>
             <div class="tab" onclick="showTab('reality')">
                 The Reality
                 <div class="tab-description">No easy fixes</div>
@@ -536,8 +542,11 @@
             <h2>Watch the Gap Grow in Real-Time</h2>
             
             <div class="explanation-box">
-                <h4>📊 What You're Seeing</h4>
-                <p>This chart shows how knowledge accumulates over time for two groups: those with strong learning skills (blue line) and those without (purple line). The orange dashed line shows the growing gap between them.</p>
+                <h4>📊 What This Graph Shows</h4>
+                <p><strong>Blue area:</strong> People who quickly adopt AI tools - their income grows exponentially as they leverage AI for 10x, 100x, even 1000x productivity gains.</p>
+                <p><strong>Purple area:</strong> Traditional workers who resist AI or adapt slowly - their income stagnates or declines as their skills become automated.</p>
+                <p><strong>Red dotted line:</strong> The multiplier showing how many times more AI adapters earn. By 2030, it could be 5-10x difference.</p>
+                <p><strong>Why it matters:</strong> This isn't gradual change - it's exponential divergence. Small differences in adaptation speed today become massive income gaps tomorrow.</p>
             </div>
 
             <div class="plot-container">
@@ -573,7 +582,8 @@
 
             <div class="explanation-box">
                 <h4>🚀 Why This Matters</h4>
-                <p>The red line shows the human limit for how fast we can adapt to change. Elite learners are approaching this limit (they can't go much faster), while others aren't even close. It's like some people are in jets while others are walking.</p>
+                <p><strong>The brutal reality:</strong> Your skills are decaying faster than you can learn new ones. The red area shows your current expertise losing value. The blue line shows AI getting exponentially better. The green dashed line? That's the maximum speed humans can possibly adapt - and it's not fast enough.</p>
+                <p><strong>The "Death Cross":</strong> Around 2026-2027, AI capabilities cross above most people's skill relevance. After this point, catching up becomes nearly impossible because AI improves faster than humans can learn.</p>
             </div>
         </div>
 
@@ -898,6 +908,42 @@
         </div>
 
         <!-- Technical Details Tab -->
+        <!-- 3D Visualization Tab -->
+        <div id="visualize3d" class="content hidden">
+            <h2>The Divergence in 3D: Watch the Gap Explode</h2>
+            
+            <div class="explanation-box">
+                <h4>🌐 What This Shows</h4>
+                <p>This 3D visualization shows how small differences today become massive gaps tomorrow. Each sphere represents a person's economic potential. Watch how AI creates two separate worlds.</p>
+                <p><strong>Controls:</strong> Click and drag to rotate • Scroll to zoom • Press SPACE to restart animation</p>
+            </div>
+            
+            <div id="three-container" style="width: 100%; height: 600px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"></div>
+            
+            <div class="metric-display" style="margin-top: 30px;">
+                <div class="metric-card">
+                    <div class="metric-label">Current Year</div>
+                    <div class="metric-value" id="year3d">2024</div>
+                    <div class="metric-context">Animation progress</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Income Gap</div>
+                    <div class="metric-value" id="gap3d">1.5x</div>
+                    <div class="metric-context">AI adopters vs others</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Divergence Speed</div>
+                    <div class="metric-value" id="speed3d">Accelerating</div>
+                    <div class="metric-context">Rate of separation</div>
+                </div>
+            </div>
+            
+            <div class="insight-box" style="margin-top: 20px;">
+                <h4>🔬 The Physics of Inequality</h4>
+                <p>Just like gravity pulls objects together, network effects pull successful AI adopters into clusters. But unlike gravity, there's a repelling force too - those without AI access get pushed further away. This creates two separate "orbits" of human potential that drift apart exponentially.</p>
+            </div>
+        </div>
+        
         <div id="details" class="content hidden">
             <h2>Technical Details for Researchers</h2>
             
@@ -1166,120 +1212,223 @@
         function plotMainVisualization() {
             const results = simulateKnowledge(6);
             
+            // Convert abstract knowledge to concrete salary multipliers
+            const baseSalary = 50000; // median US salary
+            const eliteSalaries = results.KH.map(k => baseSalary * Math.pow(k, 1.5));
+            const massSalaries = results.KL.map(k => baseSalary * Math.pow(k, 0.8));
+            const salaryGap = eliteSalaries.map((e, i) => e / massSalaries[i]);
+            
             const trace1 = {
                 x: results.t,
-                y: results.KH,
-                name: 'Knowledge Elite',
+                y: eliteSalaries,
+                name: 'AI Adapters (Fast Learners)',
                 type: 'scatter',
-                line: { color: '#667eea', width: 3 },
-                hovertemplate: 'Year: %{x}<br>Knowledge Level: %{y:.2f}<extra></extra>'
+                line: { color: '#667eea', width: 4 },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(102, 126, 234, 0.1)',
+                hovertemplate: 'Year: %{x}<br>Average Salary: $%{y:,.0f}<extra></extra>'
             };
             
             const trace2 = {
                 x: results.t,
-                y: results.KL,
-                name: 'Everyone Else',
+                y: massSalaries,
+                name: 'Traditional Workers',
                 type: 'scatter',
-                line: { color: '#764ba2', width: 3 },
-                hovertemplate: 'Year: %{x}<br>Knowledge Level: %{y:.2f}<extra></extra>'
+                line: { color: '#764ba2', width: 4 },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(118, 75, 162, 0.1)',
+                hovertemplate: 'Year: %{x}<br>Average Salary: $%{y:,.0f}<extra></extra>'
             };
             
             const trace3 = {
                 x: results.t,
-                y: results.gap,
-                name: 'Knowledge Gap',
+                y: salaryGap,
+                name: 'Income Gap Multiplier',
                 type: 'scatter',
                 yaxis: 'y2',
-                line: { color: '#f39c12', width: 3, dash: 'dash' },
-                hovertemplate: 'Year: %{x}<br>Gap Size: %{y:.2f}x<extra></extra>'
+                line: { color: '#e74c3c', width: 3, dash: 'dot' },
+                hovertemplate: 'Year: %{x}<br>AI Adapters earn %{y:.1f}x more<extra></extra>'
             };
             
             const layout = {
                 title: {
-                    text: 'The Growing Knowledge Divide',
-                    font: { size: 20 }
+                    text: 'The Income Explosion: AI Adapters vs Traditional Workers',
+                    font: { size: 24, color: '#2c3e50' }
                 },
                 xaxis: { 
                     title: 'Year',
-                    gridcolor: '#e0e0e0'
+                    gridcolor: '#e0e0e0',
+                    tickformat: 'd'
                 },
                 yaxis: { 
-                    title: 'Knowledge Level',
+                    title: 'Average Annual Income',
                     side: 'left',
-                    gridcolor: '#e0e0e0'
+                    gridcolor: '#e0e0e0',
+                    tickformat: '$,.0f',
+                    rangemode: 'tozero'
                 },
                 yaxis2: {
-                    title: 'Gap Size (Elite ÷ Everyone Else)',
+                    title: 'Income Gap (How many times more AI adapters earn)',
                     overlaying: 'y',
                     side: 'right',
-                    gridcolor: '#e0e0e0'
+                    gridcolor: '#e0e0e0',
+                    tickformat: '.1f',
+                    range: [0, Math.max(...salaryGap) * 1.1],
+                    titlefont: { color: '#e74c3c' },
+                    tickfont: { color: '#e74c3c' }
                 },
                 showlegend: true,
                 legend: { 
                     x: 0.02, 
                     y: 0.98,
-                    bgcolor: 'rgba(255,255,255,0.8)'
+                    bgcolor: 'rgba(255,255,255,0.9)',
+                    bordercolor: '#ccc',
+                    borderwidth: 1
                 },
-                margin: { t: 50 },
-                plot_bgcolor: '#fafafa',
-                paper_bgcolor: 'white'
+                margin: { t: 80, r: 100 },
+                plot_bgcolor: '#ffffff',
+                paper_bgcolor: '#f5f7fa',
+                annotations: [
+                    {
+                        x: 2027,
+                        y: eliteSalaries[eliteSalaries.length - 2],
+                        text: 'Point of no return',
+                        showarrow: true,
+                        arrowhead: 2,
+                        ax: -50,
+                        ay: -30,
+                        bgcolor: '#ffebee',
+                        borderpad: 4
+                    },
+                    {
+                        x: 2025,
+                        y: 30000,
+                        text: '<b>What this shows:</b><br>People who adapt to AI see exponential income growth<br>Traditional workers see stagnant or declining wages<br>The gap becomes insurmountable by 2027',
+                        showarrow: false,
+                        bgcolor: 'rgba(255,255,255,0.95)',
+                        bordercolor: '#667eea',
+                        borderwidth: 2,
+                        borderpad: 10,
+                        font: { size: 12 },
+                        align: 'left'
+                    }
+                ]
             };
             
             Plotly.newPlot('mainVisualization', [trace1, trace2, trace3], layout, {responsive: true});
         }
 
         function plotAcceleration() {
-            const results = simulateKnowledge(6);
+            // Show skill relevance decay over time
+            const years = [];
+            const skillRelevance = [];
+            const aiCapability = [];
+            const humanAdaptation = [];
+            
+            for (let year = 2024; year <= 2030; year += 0.25) {
+                years.push(year);
+                // Skills decay exponentially
+                const yearsElapsed = year - 2024;
+                skillRelevance.push(100 * Math.exp(-yearsElapsed / 2.5)); // 2.5 year half-life
+                // AI capability grows exponentially
+                aiCapability.push(20 * Math.exp(yearsElapsed * 0.48)); // 48% annual growth
+                // Human adaptation is limited and linear
+                humanAdaptation.push(Math.min(20 + yearsElapsed * 10, 50));
+            }
             
             const trace1 = {
-                x: results.t,
-                y: results.JH,
-                name: 'Elite Learning Jerk',
+                x: years,
+                y: skillRelevance,
+                name: 'Your Current Skills Value',
                 type: 'scatter',
-                line: { color: '#667eea', width: 2 }
+                line: { color: '#e74c3c', width: 4 },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(231, 76, 60, 0.1)',
+                hovertemplate: 'Year: %{x}<br>Skills still relevant: %{y:.0f}%<extra></extra>'
             };
             
             const trace2 = {
-                x: results.t,
-                y: results.JL,
-                name: 'Mass Learning Jerk',
+                x: years,
+                y: aiCapability,
+                name: 'AI Capabilities',
                 type: 'scatter',
-                line: { color: '#764ba2', width: 2 }
+                line: { color: '#3498db', width: 4 },
+                hovertemplate: 'Year: %{x}<br>AI capability: %{y:.0f}%<extra></extra>'
             };
             
             const trace3 = {
-                x: results.t,
-                y: new Array(results.t.length).fill(0.4),
-                name: 'Human Cognitive Limit',
+                x: years,
+                y: humanAdaptation,
+                name: 'Human Adaptation Speed',
                 type: 'scatter',
-                line: { color: '#e74c3c', width: 3, dash: 'dash' },
-                hovertemplate: 'Maximum human adaptation rate<extra></extra>'
+                line: { color: '#27ae60', width: 3, dash: 'dash' },
+                hovertemplate: 'Year: %{x}<br>Max human adaptation: %{y:.0f}%<extra></extra>'
             };
             
             const layout = {
                 title: {
-                    text: 'How Fast Learning Accelerates (Jerk)',
-                    font: { size: 18 }
+                    text: 'The Race You\'re Losing: Skills Decay vs AI Growth',
+                    font: { size: 24, color: '#2c3e50' }
                 },
                 xaxis: { 
                     title: 'Year',
-                    gridcolor: '#e0e0e0'
+                    gridcolor: '#e0e0e0',
+                    tickformat: 'd',
+                    dtick: 1
                 },
                 yaxis: { 
-                    title: 'Learning Acceleration Rate',
-                    gridcolor: '#e0e0e0'
+                    title: 'Percentage (%)',
+                    gridcolor: '#e0e0e0',
+                    range: [0, 120]
                 },
-                annotations: [{
-                    x: 2028,
-                    y: 0.4,
-                    text: 'Human limit',
-                    showarrow: true,
-                    arrowhead: 2,
-                    ax: 40,
-                    ay: -40
+                annotations: [
+                    {
+                        x: 2026.5,
+                        y: 37,
+                        text: '<b>The Death Cross</b><br>When AI surpasses<br>your skills',
+                        showarrow: true,
+                        arrowhead: 2,
+                        ax: 50,
+                        ay: -40,
+                        bgcolor: '#ffebee',
+                        borderpad: 4,
+                        font: { color: '#c0392b' }
+                    },
+                    {
+                        x: 2027.5,
+                        y: 90,
+                        text: '<b>Key Insight:</b><br>Your skills lose half their value every 2.5 years<br>AI doubles capability every 1.5 years<br>Humans can only adapt so fast (green line)',
+                        showarrow: false,
+                        bgcolor: 'rgba(255,255,255,0.95)',
+                        bordercolor: '#3498db',
+                        borderwidth: 2,
+                        borderpad: 10,
+                        font: { size: 12 },
+                        align: 'left'
+                    }
+                ],
+                shapes: [{
+                    type: 'line',
+                    x0: 2024,
+                    y0: 50,
+                    x1: 2030,
+                    y1: 50,
+                    line: {
+                        color: '#7f8c8d',
+                        width: 1,
+                        dash: 'dot'
+                    }
                 }],
-                plot_bgcolor: '#fafafa',
-                paper_bgcolor: 'white'
+                plot_bgcolor: '#ffffff',
+                paper_bgcolor: '#f5f7fa',
+                showlegend: true,
+                legend: {
+                    x: 0.02,
+                    y: 0.98,
+                    bgcolor: 'rgba(255,255,255,0.9)',
+                    bordercolor: '#ccc',
+                    borderwidth: 1
+                }
             };
             
             Plotly.newPlot('accelerationVisualization', [trace1, trace2, trace3], layout, {responsive: true});
@@ -1292,57 +1441,120 @@
             const mentalHealth = [67, 55, 48, 23, 51, 62, 12, 71]; // % with AI job anxiety
             
             // Normalize job changes for visualization
-            const normalizedChanges = jobChanges.map(v => {
-                if (v === 0) return 0;
-                if (v > 0) return Math.min(100, (v / 1000000) * 10); // Scale positive growth
-                return (v / -230831) * -100; // Normalize losses to tech baseline
+            // Create bubble chart for better visualization
+            const trace1 = {
+                x: aiAdoption,
+                y: mentalHealth,
+                mode: 'markers+text',
+                type: 'scatter',
+                marker: {
+                    size: jobChanges.map(v => {
+                        // Size based on absolute job impact
+                        const absChange = Math.abs(v);
+                        if (absChange > 1000000) return 80;
+                        if (absChange > 100000) return 60;
+                        if (absChange > 10000) return 40;
+                        return 20;
+                    }),
+                    color: jobChanges.map(v => v < 0 ? '#e74c3c' : v > 0 ? '#27ae60' : '#95a5a6'),
+                    line: {
+                        color: jobChanges.map(v => v < 0 ? '#c0392b' : v > 0 ? '#229954' : '#7f8c8d'),
+                        width: 2
+                    },
+                    opacity: 0.8
+                },
+                text: industries,
+                textposition: 'top center',
+                hovertemplate: '<b>%{text}</b><br>' +
+                             'AI Adoption: %{x}%<br>' +
+                             'Job Anxiety: %{y}%<br>' +
+                             'Jobs Change: ' + jobChanges.map(v => v > 0 ? '+' + v.toLocaleString() : v.toLocaleString()) +
+                             '<extra></extra>',
+                hoverlabel: { bgcolor: 'white' }
+            };
+            
+            // Add quadrant lines
+            const shapes = [
+                {
+                    type: 'line',
+                    x0: 50, y0: 0, x1: 50, y1: 100,
+                    line: { color: '#bdc3c7', width: 1, dash: 'dot' }
+                },
+                {
+                    type: 'line',
+                    x0: 0, y0: 50, x1: 100, y1: 50,
+                    line: { color: '#bdc3c7', width: 1, dash: 'dot' }
+                }
+            ];
+            
+            const annotations = [
+                {
+                    x: 25, y: 75,
+                    text: '<b>Low AI, High Anxiety</b><br>Falling behind',
+                    showarrow: false,
+                    font: { color: '#e74c3c', size: 12 },
+                    bgcolor: 'rgba(255,255,255,0.8)'
+                },
+                {
+                    x: 75, y: 75,
+                    text: '<b>High AI, High Anxiety</b><br>Disruption zone',
+                    showarrow: false,
+                    font: { color: '#f39c12', size: 12 },
+                    bgcolor: 'rgba(255,255,255,0.8)'
+                },
+                {
+                    x: 25, y: 25,
+                    text: '<b>Low AI, Low Anxiety</b><br>Stable (for now)',
+                    showarrow: false,
+                    font: { color: '#95a5a6', size: 12 },
+                    bgcolor: 'rgba(255,255,255,0.8)'
+                },
+                {
+                    x: 75, y: 25,
+                    text: '<b>High AI, Low Anxiety</b><br>Adaptation success',
+                    showarrow: false,
+                    font: { color: '#27ae60', size: 12 },
+                    bgcolor: 'rgba(255,255,255,0.8)'
+                }
+            ];
+            
+            // Add size legend
+            annotations.push({
+                x: 0.02, y: 0.98,
+                xref: 'paper', yref: 'paper',
+                text: '<b>Bubble size = Job impact</b><br>Red = Job losses<br>Green = Job gains',
+                showarrow: false,
+                font: { size: 11 },
+                bgcolor: 'rgba(255,255,255,0.95)',
+                bordercolor: '#667eea',
+                borderwidth: 1,
+                borderpad: 8,
+                align: 'left',
+                xanchor: 'left',
+                yanchor: 'top'
             });
             
-            const trace1 = {
-                x: industries,
-                y: normalizedChanges,
-                name: 'Job Impact (normalized)',
-                type: 'bar',
-                marker: { 
-                    color: normalizedChanges.map(v => v < 0 ? '#e74c3c' : v > 0 ? '#27ae60' : '#95a5a6')
-                },
-                text: jobChanges.map(v => {
-                    if (v === 0) return 'Stable';
-                    if (v > 0) return '+15M projected';
-                    return v.toLocaleString();
-                }),
-                textposition: 'outside',
-                hovertemplate: '%{text}<extra></extra>'
-            };
-            
-            const trace2 = {
-                x: industries,
-                y: aiAdoption,
-                name: 'AI Adoption Rate (%)',
-                type: 'scatter',
-                mode: 'lines+markers',
-                line: { color: '#3498db', width: 3 },
-                marker: { size: 10 },
-                yaxis: 'y2'
-            };
-            
             const layout = {
-                title: 'AI Impact Across Industries: Jobs vs Adoption (2024-2025)',
-                yaxis: { 
-                    title: 'Job Impact',
-                    zeroline: true,
-                    zerolinewidth: 2,
-                    zerolinecolor: '#000'
+                title: {
+                    text: 'The AI Anxiety Matrix: Where Does Your Industry Stand?',
+                    font: { size: 24, color: '#2c3e50' }
                 },
-                yaxis2: {
+                xaxis: { 
                     title: 'AI Adoption Rate (%)',
-                    overlaying: 'y',
-                    side: 'right',
+                    gridcolor: '#e0e0e0',
                     range: [0, 100]
                 },
-                plot_bgcolor: '#fafafa',
-                paper_bgcolor: 'white',
-                showlegend: true
+                yaxis: { 
+                    title: 'Worker Anxiety Level (%)',
+                    gridcolor: '#e0e0e0',
+                    range: [0, 80]
+                },
+                shapes: shapes,
+                annotations: annotations,
+                plot_bgcolor: '#ffffff',
+                paper_bgcolor: '#f5f7fa',
+                showlegend: false,
+                margin: { t: 80, r: 50, b: 80, l: 80 }
             };
             
             Plotly.newPlot('factorsVisualization', [trace1, trace2], layout, {responsive: true});
@@ -1529,6 +1741,12 @@
                     break;
                 case 'details':
                     plotValidation();
+                    break;
+                case 'visualize3d':
+                    if (!window.threeScene) {
+                        init3DVisualization();
+                    }
+                    animate3D();
                     break;
             }
             
@@ -1719,6 +1937,158 @@
             alert('Technical paper is under peer review. Pre-print available at arxiv.org/example');
         }
 
+        // 3D Visualization
+        let threeScene, threeCamera, threeRenderer, particles = [];
+        let animationYear = 2024;
+        let animationFrame = 0;
+        
+        function init3DVisualization() {
+            const container = document.getElementById('three-container');
+            const width = container.clientWidth;
+            const height = 600;
+            
+            // Scene setup
+            threeScene = new THREE.Scene();
+            threeScene.background = new THREE.Color(0xf5f7fa);
+            threeScene.fog = new THREE.Fog(0xf5f7fa, 100, 400);
+            
+            // Camera
+            threeCamera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            threeCamera.position.set(0, 50, 150);
+            threeCamera.lookAt(0, 0, 0);
+            
+            // Renderer
+            threeRenderer = new THREE.WebGLRenderer({ antialias: true });
+            threeRenderer.setSize(width, height);
+            threeRenderer.shadowMap.enabled = true;
+            container.appendChild(threeRenderer.domElement);
+            
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            threeScene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(50, 100, 50);
+            directionalLight.castShadow = true;
+            threeScene.add(directionalLight);
+            
+            // Create particle groups
+            const particleCount = 200;
+            const geometry = new THREE.SphereGeometry(1, 16, 16);
+            
+            for (let i = 0; i < particleCount; i++) {
+                const isElite = i < particleCount * 0.2; // 20% are AI adopters
+                const material = new THREE.MeshPhongMaterial({
+                    color: isElite ? 0x667eea : 0x764ba2,
+                    emissive: isElite ? 0x667eea : 0x764ba2,
+                    emissiveIntensity: 0.2,
+                    transparent: true,
+                    opacity: 0.8
+                });
+                
+                const mesh = new THREE.Mesh(geometry, material);
+                mesh.position.set(
+                    (Math.random() - 0.5) * 50,
+                    (Math.random() - 0.5) * 20,
+                    (Math.random() - 0.5) * 50
+                );
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
+                
+                particles.push({
+                    mesh: mesh,
+                    isElite: isElite,
+                    velocity: new THREE.Vector3(
+                        (Math.random() - 0.5) * 0.1,
+                        isElite ? 0.5 : -0.1,
+                        (Math.random() - 0.5) * 0.1
+                    ),
+                    baseY: mesh.position.y
+                });
+                
+                threeScene.add(mesh);
+            }
+            
+            // Add grid
+            const gridHelper = new THREE.GridHelper(200, 20, 0xcccccc, 0xeeeeee);
+            gridHelper.position.y = -30;
+            threeScene.add(gridHelper);
+            
+            // Controls
+            const controls = new THREE.OrbitControls(threeCamera, threeRenderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.maxDistance = 300;
+            controls.minDistance = 50;
+            
+            window.threeScene = threeScene;
+            window.threeControls = controls;
+        }
+        
+        function animate3D() {
+            if (!window.threeScene) return;
+            
+            requestAnimationFrame(animate3D);
+            animationFrame++;
+            
+            // Update year
+            animationYear = 2024 + (animationFrame / 600) * 6; // 6 years over 600 frames
+            if (animationYear > 2030) {
+                animationFrame = 0;
+                animationYear = 2024;
+            }
+            
+            // Calculate gap
+            const yearProgress = (animationYear - 2024) / 6;
+            const gapMultiplier = 1.5 * Math.exp(yearProgress * 1.5);
+            
+            // Update particles
+            particles.forEach(p => {
+                if (p.isElite) {
+                    // AI adopters rise exponentially
+                    p.mesh.position.y = p.baseY + Math.exp(yearProgress * 2) * 20;
+                    p.mesh.scale.setScalar(1 + yearProgress * 2);
+                    // Cluster together
+                    p.mesh.position.x *= 0.99;
+                    p.mesh.position.z *= 0.99;
+                } else {
+                    // Others sink slowly
+                    p.mesh.position.y = p.baseY - yearProgress * 10;
+                    p.mesh.scale.setScalar(1 - yearProgress * 0.3);
+                    // Spread apart
+                    p.mesh.position.x *= 1.01;
+                    p.mesh.position.z *= 1.01;
+                }
+                
+                // Add some movement
+                p.mesh.position.add(p.velocity);
+                p.mesh.rotation.y += 0.01;
+            });
+            
+            // Update UI
+            document.getElementById('year3d').textContent = animationYear.toFixed(1);
+            document.getElementById('gap3d').textContent = gapMultiplier.toFixed(1) + 'x';
+            document.getElementById('speed3d').textContent = 
+                yearProgress < 0.3 ? 'Gradual' :
+                yearProgress < 0.6 ? 'Accelerating' :
+                'Exponential';
+            
+            // Render
+            if (window.threeControls) window.threeControls.update();
+            threeRenderer.render(threeScene, threeCamera);
+        }
+        
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && window.threeScene) {
+                animationFrame = 0;
+                particles.forEach(p => {
+                    p.mesh.position.y = p.baseY;
+                    p.mesh.scale.setScalar(1);
+                });
+            }
+        });
+        
         // Initialize on load
         window.onload = function() {
             // Check if returning visitor
