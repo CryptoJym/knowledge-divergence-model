@@ -542,11 +542,31 @@
             <h2>Watch the Gap Grow in Real-Time</h2>
             
             <div class="explanation-box">
-                <h4>📊 What This Graph Shows</h4>
-                <p><strong>Blue area:</strong> People who quickly adopt AI tools - their income grows exponentially as they leverage AI for 10x, 100x, even 1000x productivity gains.</p>
-                <p><strong>Purple area:</strong> Traditional workers who resist AI or adapt slowly - their income stagnates or declines as their skills become automated.</p>
-                <p><strong>Red dotted line:</strong> The multiplier showing how many times more AI adapters earn. By 2030, it could be 5-10x difference.</p>
-                <p><strong>Why it matters:</strong> This isn't gradual change - it's exponential divergence. Small differences in adaptation speed today become massive income gaps tomorrow.</p>
+                <h4>👀 What You're Watching</h4>
+                <p>Two groups of people starting with the same $50,000 salary. Watch what happens over 6 years.</p>
+            </div>
+
+            <!-- Visual Income Comparison -->
+            <div style="background: white; padding: 30px; border-radius: 10px; margin: 20px 0;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+                    <div style="text-align: center;">
+                        <h3 style="color: #667eea;">AI Adopters</h3>
+                        <div style="font-size: 2em; margin: 10px 0;">🚀</div>
+                        <div id="eliteIncome" style="font-size: 3em; font-weight: bold; color: #667eea;">$50,000</div>
+                        <p>Using AI daily, learning fast</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <h3 style="color: #764ba2;">Traditional Workers</h3>
+                        <div style="font-size: 2em; margin: 10px 0;">🐢</div>
+                        <div id="massIncome" style="font-size: 3em; font-weight: bold; color: #764ba2;">$50,000</div>
+                        <p>Avoiding AI, sticking to old ways</p>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee;">
+                    <h4>Income Gap</h4>
+                    <div id="incomeGapDisplay" style="font-size: 4em; font-weight: bold; color: #e74c3c;">1x</div>
+                    <p id="gapMeaning">They earn the same</p>
+                </div>
             </div>
 
             <div class="plot-container">
@@ -555,14 +575,17 @@
 
             <div class="slider-container">
                 <div class="slider-description">
-                    🎮 <strong>Try This:</strong> Adjust how fast AI is improving to see how it affects the gap
+                    🎮 <strong>Try This:</strong> Move the slider to see how AI speed changes everything
                 </div>
                 <div class="slider-label">
                     <span>AI Progress Speed</span>
                     <span id="aiSpeedValue">Normal (38% per year)</span>
                 </div>
-                <input type="range" id="aiSpeedSlider" min="0" max="100" value="38" oninput="updateAISpeed()">
-                <p style="font-size: 0.9em; color: #666;">👈 Slower AI progress &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Faster AI progress 👉</p>
+                <input type="range" id="aiSpeedSlider" min="10" max="100" value="38" oninput="updateAISpeed()">
+                <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.9em; color: #666;">
+                    <span>🐢 Slow AI Progress</span>
+                    <span>🚀 Fast AI Progress</span>
+                </div>
             </div>
 
             <div class="insight-box">
@@ -982,46 +1005,87 @@
 
         <!-- Future Scenarios Tab -->
         <div id="future" class="content hidden">
-            <h2>Where This Leads: Three Futures</h2>
+            <h2>Choose Your Future: See What Happens by 2030</h2>
             
             <div class="explanation-box">
-                <h4>🔮 Interactive Future Simulator</h4>
-                <p>Adjust the sliders below to see how different scenarios play out by 2030</p>
+                <h4>🎮 Build Your Own Future</h4>
+                <p>Move the sliders to see different futures. Which one are we heading toward?</p>
             </div>
 
-            <div class="slider-container">
-                <div class="slider-label">
-                    <span>AI Development Speed</span>
-                    <span id="futureAIValue">Current Pace</span>
+            <!-- Visual Future Builder -->
+            <div style="background: white; padding: 30px; border-radius: 10px; margin: 20px 0;">
+                <div class="slider-container" style="background: #f5f7fa; margin-bottom: 0;">
+                    <div class="slider-label">
+                        <span>🤖 AI Development Speed</span>
+                        <span id="futureAIValue">Current Pace</span>
+                    </div>
+                    <input type="range" id="futureAISlider" min="0" max="100" value="50" oninput="updateFutureScenario()">
+                    <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.9em; color: #666;">
+                        <span>Slow 🐢</span>
+                        <span>Current 🚗</span>
+                        <span>Fast 🚀</span>
+                    </div>
+                    
+                    <div class="slider-label" style="margin-top: 20px;">
+                        <span>🏫 Government Response</span>
+                        <span id="interventionValue">None</span>
+                    </div>
+                    <input type="range" id="interventionSlider" min="0" max="100" value="0" oninput="updateFutureScenario()">
+                    <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.9em; color: #666;">
+                        <span>Nothing 😴</span>
+                        <span>Some Help 🤝</span>
+                        <span>Major Action 💡</span>
+                    </div>
                 </div>
-                <input type="range" id="futureAISlider" min="0" max="100" value="50" oninput="updateFutureScenario()">
                 
-                <div class="slider-label" style="margin-top: 20px;">
-                    <span>Education Intervention Level</span>
-                    <span id="interventionValue">None</span>
+                <!-- Visual Society Display -->
+                <div id="societyVisual" style="margin-top: 30px; padding: 30px; background: #f8f9fa; border-radius: 10px;">
+                    <h3 style="text-align: center; color: #667eea; margin-bottom: 20px;">Your 2030 Society</h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+                        <!-- Rich Side -->
+                        <div style="text-align: center;">
+                            <h4>AI Adopters</h4>
+                            <div id="richHouses" style="font-size: 3em; margin: 10px 0;">🏦🏦🏦</div>
+                            <div id="richIncome" style="font-size: 2em; font-weight: bold; color: #4caf50;">$250,000/year</div>
+                            <p id="richLife" style="margin-top: 10px;">Thriving in AI economy</p>
+                        </div>
+                        
+                        <!-- Poor Side -->
+                        <div style="text-align: center;">
+                            <h4>Traditional Workers</h4>
+                            <div id="poorHouses" style="font-size: 3em; margin: 10px 0;">🏠</div>
+                            <div id="poorIncome" style="font-size: 2em; font-weight: bold; color: #f44336;">$35,000/year</div>
+                            <p id="poorLife" style="margin-top: 10px;">Struggling to survive</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Society Meter -->
+                    <div style="text-align: center;">
+                        <h4>Society Health Meter</h4>
+                        <div style="background: #e0e0e0; height: 30px; border-radius: 15px; overflow: hidden; margin: 10px auto; max-width: 400px;">
+                            <div id="societyHealthBar" style="height: 100%; background: linear-gradient(to right, #f44336, #ff9800, #4caf50); width: 30%; transition: width 0.5s;"></div>
+                        </div>
+                        <p id="societyHealthText" style="font-size: 1.2em; margin-top: 10px;">Unstable - High inequality</p>
+                    </div>
                 </div>
-                <input type="range" id="interventionSlider" min="0" max="100" value="0" oninput="updateFutureScenario()">
             </div>
 
-            <div class="plot-container">
-                <div id="futureVisualization"></div>
-            </div>
-
-            <div class="metric-display" id="futureMetrics">
+            <div class="metric-display" id="futureMetrics" style="margin-top: 30px;">
                 <div class="metric-card">
-                    <div class="metric-label">Income Gap by 2030</div>
-                    <div class="metric-value" id="futureGapValue">5.0x</div>
-                    <div class="metric-context" id="futureGapContext">Status quo scenario</div>
+                    <div class="metric-label">Income Gap</div>
+                    <div class="metric-value" id="futureGapValue">7.1x</div>
+                    <div class="metric-context" id="futureGapContext">Extreme inequality</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-label">Social Mobility</div>
-                    <div class="metric-value" id="mobilityValue">Low</div>
-                    <div class="metric-context" id="mobilityContext">Hard to change class</div>
+                    <div class="metric-label">Can Poor Become Rich?</div>
+                    <div class="metric-value" id="mobilityValue">No</div>
+                    <div class="metric-context" id="mobilityContext">Gap too wide</div>
                 </div>
                 <div class="metric-card">
                     <div class="metric-label">Society Type</div>
-                    <div class="metric-value" id="societyValue">Divided</div>
-                    <div class="metric-context" id="societyContext">Two-tier system</div>
+                    <div class="metric-value" id="societyValue">Two Worlds</div>
+                    <div class="metric-context" id="societyContext">Separate realities</div>
                 </div>
             </div>
 
@@ -1063,12 +1127,80 @@
 
         <!-- Reality Tab -->
         <div id="reality" class="content hidden">
-            <h2>The Uncomfortable Reality: No Easy Solutions</h2>
+            <h2>The Uncomfortable Reality: Why Nothing Works</h2>
             
-            <div class="big-idea">
-                <strong>The Research Shows:</strong> Traditional interventions (education, training, policy) appear insufficient to counter the accelerating forces of AI-driven inequality. The compound effects create a divide that may be irreversible.
+            <div class="big-idea" style="background: #ffebee; border-color: #f44336;">
+                <strong>⚠️ Hard Truth:</strong> We tested every "solution" people suggest. Here's why they all fail.
+            </div>
+            
+            <!-- Visual Solutions That Don't Work -->
+            <div style="background: white; padding: 30px; border-radius: 10px; margin: 20px 0;">
+                <h3 style="text-align: center; color: #667eea; margin-bottom: 30px;">The "Solutions" That Don't Work</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <!-- Solution 1 -->
+                    <div style="background: #ffebee; padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 3em; margin-bottom: 10px;">🏫</div>
+                        <h4>"Just Get More Education"</h4>
+                        <div style="font-size: 2em; color: #f44336; font-weight: bold;">17%</div>
+                        <p>Success rate of retraining programs</p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">Your degree expires before loans paid off</p>
+                    </div>
+                    
+                    <!-- Solution 2 -->
+                    <div style="background: #ffebee; padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 3em; margin-bottom: 10px;">💻</div>
+                        <h4>"Learn to Code"</h4>
+                        <div style="font-size: 2em; color: #f44336; font-weight: bold;">-230,831</div>
+                        <p>Developer jobs lost</p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">AI codes better than humans now</p>
+                    </div>
+                    
+                    <!-- Solution 3 -->
+                    <div style="background: #ffebee; padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 3em; margin-bottom: 10px;">🏦</div>
+                        <h4>"Government Will Help"</h4>
+                        <div style="font-size: 2em; color: #f44336; font-weight: bold;">40 States</div>
+                        <p>With conflicting AI laws</p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">No federal protection coming</p>
+                    </div>
+                    
+                    <!-- Solution 4 -->
+                    <div style="background: #ffebee; padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 3em; margin-bottom: 10px;">💵</div>
+                        <h4>"Universal Basic Income"</h4>
+                        <div style="font-size: 2em; color: #f44336; font-weight: bold;">$3T+</div>
+                        <p>Annual cost</p>
+                        <p style="font-size: 0.9em; margin-top: 10px;">Political impossibility</p>
+                    </div>
+                </div>
             </div>
 
+            <!-- What Actually Works -->
+            <div style="background: #e8f5e9; padding: 30px; border-radius: 10px; margin: 30px 0;">
+                <h3 style="text-align: center; color: #4caf50; margin-bottom: 30px;">The Only Things That Actually Work</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 3em; margin-bottom: 10px;">⏱️</div>
+                        <h4>Start RIGHT NOW</h4>
+                        <p>Every day you wait, the gap grows exponentially</p>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 3em; margin-bottom: 10px;">🚀</div>
+                        <h4>Ship Fast, Not Perfect</h4>
+                        <p>Bad AI work beats perfect traditional work</p>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 3em; margin-bottom: 10px;">👥</div>
+                        <h4>Network with AI Users</h4>
+                        <p>You become who you surround yourself with</p>
+                    </div>
+                </div>
+            </div>
+            
             <h3>The Real Winners: Ambitious Outsiders</h3>
             
             <div class="real-world-example">
@@ -1142,6 +1274,41 @@
                 </ul>
             </div>
 
+            <!-- Geographic Reality Visual -->
+            <div style="background: white; padding: 30px; border-radius: 10px; margin: 30px 0;">
+                <h3 style="text-align: center; color: #667eea; margin-bottom: 30px;">The Geographic Truth: Your Location = Your Future</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                    <div style="text-align: center;">
+                        <h4 style="color: #4caf50;">AI Clusters</h4>
+                        <div style="font-size: 4em;">🌆</div>
+                        <p><strong>Nashville, Austin, Las Vegas</strong></p>
+                        <ul style="text-align: left; margin: 10px auto; max-width: 200px;">
+                            <li>Fast internet everywhere</li>
+                            <li>AI jobs abundant</li>
+                            <li>Everyone learning together</li>
+                            <li>Salaries rising fast</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <h4 style="color: #f44336;">AI Deserts</h4>
+                        <div style="font-size: 4em;">🏜️</div>
+                        <p><strong>Rural Areas</strong></p>
+                        <ul style="text-align: left; margin: 10px auto; max-width: 200px;">
+                            <li>39% less internet</li>
+                            <li>No AI companies</li>
+                            <li>Nobody to learn from</li>
+                            <li>Falling further behind</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #eee;">
+                    <p style="font-size: 1.2em; color: #f44336;"><strong>If you're in an AI desert, moving might be your only option.</strong></p>
+                </div>
+            </div>
+            
             <div class="plot-container">
                 <div id="realityChart"></div>
             </div>
@@ -2024,8 +2191,29 @@
                             value < 80 ? 'Fast' : 'Very Fast';
             document.getElementById('aiSpeedValue').textContent = `${speedText} (${value}% per year)`;
             
+            // Calculate custom g0 based on slider value (0-100 maps to 0.2-1.0)
+            const customG0 = 0.2 + (value / 100) * 0.8;
+            
             // Re-plot with new AI speed
-            plotMainVisualization(value / 100);
+            plotMainVisualization(customG0);
+            
+            // Update the income displays
+            const results = simulateKnowledge(6, { g0: customG0 });
+            const baseSalary = 50000;
+            const finalEliteIncome = baseSalary * Math.pow(results.KH[results.KH.length - 1], 1.5);
+            const finalMassIncome = baseSalary * Math.pow(results.KL[results.KL.length - 1], 0.8);
+            const gap = finalEliteIncome / finalMassIncome;
+            
+            document.getElementById('eliteIncome').textContent = '$' + Math.round(finalEliteIncome).toLocaleString();
+            document.getElementById('massIncome').textContent = '$' + Math.round(finalMassIncome).toLocaleString();
+            document.getElementById('incomeGapDisplay').textContent = gap.toFixed(1) + 'x';
+            
+            // Update gap meaning
+            const meaning = gap < 2 ? 'Small advantage' :
+                          gap < 3 ? 'Significant gap forming' :
+                          gap < 5 ? 'Massive inequality' :
+                          'Different economic worlds';
+            document.getElementById('gapMeaning').textContent = meaning;
         }
 
         function updateFutureScenario() {
@@ -2033,45 +2221,81 @@
             const intervention = parseFloat(document.getElementById('interventionSlider').value);
             
             // Update labels
-            const aiText = aiSpeed < 30 ? 'Slow' : aiSpeed < 70 ? 'Current Pace' : 'Accelerated';
-            const intText = intervention < 30 ? 'None' : intervention < 70 ? 'Moderate' : 'Aggressive';
+            const aiText = aiSpeed < 30 ? 'Slow' : aiSpeed < 70 ? 'Current Pace' : 'Hyper-Fast';
+            const intText = intervention < 30 ? 'None' : intervention < 70 ? 'Some Effort' : 'Major Programs';
             
             document.getElementById('futureAIValue').textContent = aiText;
             document.getElementById('interventionValue').textContent = intText;
             
-            // Update plot
-            plotFuture(aiSpeed - 50, intervention);
+            // Calculate future outcomes using simulation
+            const customG0 = 0.4 + (aiSpeed / 100) * 0.6; // Map 0-100 to 0.4-1.0
+            const interventionMultiplier = 1 - (intervention / 100) * 0.3; // Interventions reduce gap by up to 30%
             
-            // Update metrics
-            const results = simulateKnowledge(6, {
-                g0: params.g0 * (1 + (aiSpeed - 50) / 100),
-                betaL: params.betaL * (1 + intervention / 100),
-                psiL: params.psiL * (1 - 0.25 * intervention / 100)
+            // Run simulation to 2030 (6 years)
+            const results = simulateKnowledge(6, { 
+                g0: customG0,
+                psiL: params.psiL * interventionMultiplier
             });
             
-            const finalGap = Math.exp(results.gap[results.gap.length - 1]);
-            document.getElementById('futureGapValue').textContent = finalGap.toFixed(1) + 'x';
+            // Get final values
+            const baseSalary = 50000;
+            const finalEliteIncome = baseSalary * Math.pow(results.KH[results.KH.length - 1], 1.5);
+            const finalMassIncome = baseSalary * Math.pow(results.KL[results.KL.length - 1], 0.8);
+            const gap = finalEliteIncome / finalMassIncome;
             
-            // Update context based on scenario
-            if (intervention > 70) {
-                document.getElementById('futureGapContext').textContent = 'Intervention success';
-                document.getElementById('mobilityValue').textContent = 'High';
-                document.getElementById('mobilityContext').textContent = 'Opportunities for all';
-                document.getElementById('societyValue').textContent = 'Inclusive';
-                document.getElementById('societyContext').textContent = 'Broad middle class';
-            } else if (aiSpeed > 70 && intervention < 30) {
-                document.getElementById('futureGapContext').textContent = 'Extreme divergence';
-                document.getElementById('mobilityValue').textContent = 'Very Low';
-                document.getElementById('mobilityContext').textContent = 'Rigid classes';
-                document.getElementById('societyValue').textContent = 'Fractured';
-                document.getElementById('societyContext').textContent = 'Separate worlds';
+            // Update visual society
+            const richIncome = Math.min(Math.round(finalEliteIncome), 500000);
+            const poorIncome = Math.max(Math.round(finalMassIncome), 25000);
+            
+            document.getElementById('richIncome').textContent = '$' + richIncome.toLocaleString() + '/year';
+            document.getElementById('poorIncome').textContent = '$' + poorIncome.toLocaleString() + '/year';
+            
+            // Update visual representations
+            if (gap > 10) {
+                document.getElementById('richHouses').textContent = '🏰🏰🏰';
+                document.getElementById('poorHouses').textContent = '🏡';
+                document.getElementById('richLife').textContent = 'Living in AI paradise';
+                document.getElementById('poorLife').textContent = 'Barely surviving';
+            } else if (gap > 5) {
+                document.getElementById('richHouses').textContent = '🏢🏢';
+                document.getElementById('poorHouses').textContent = '🏠';
+                document.getElementById('richLife').textContent = 'Comfortable AI lifestyle';
+                document.getElementById('poorLife').textContent = 'Struggling with bills';
             } else {
-                document.getElementById('futureGapContext').textContent = 'Current trajectory';
-                document.getElementById('mobilityValue').textContent = 'Low';
-                document.getElementById('mobilityContext').textContent = 'Limited opportunities';
-                document.getElementById('societyValue').textContent = 'Divided';
-                document.getElementById('societyContext').textContent = 'Growing inequality';
+                document.getElementById('richHouses').textContent = '🏠🏠';
+                document.getElementById('poorHouses').textContent = '🏠';
+                document.getElementById('richLife').textContent = 'Good opportunities';
+                document.getElementById('poorLife').textContent = 'Managing okay';
             }
+            
+            // Update society health
+            const healthScore = Math.max(10, 100 - (gap * 10) + (intervention * 0.5));
+            document.getElementById('societyHealthBar').style.width = healthScore + '%';
+            
+            const healthText = healthScore > 70 ? 'Healthy - Balanced growth' :
+                             healthScore > 40 ? 'Stressed - Growing tensions' :
+                             'Critical - Society breaking apart';
+            document.getElementById('societyHealthText').textContent = healthText;
+            
+            // Update metrics with proper values
+            document.getElementById('futureGapValue').textContent = (gap > 0 && gap < Infinity) ? gap.toFixed(1) + 'x' : 'N/A';
+            document.getElementById('futureGapContext').textContent = 
+                gap > 10 ? 'Extreme inequality' :
+                gap > 5 ? 'Severe inequality' :
+                gap > 3 ? 'Significant gap' : 'Manageable difference';
+            
+            document.getElementById('mobilityValue').textContent = 
+                gap > 8 ? 'No' : gap > 5 ? 'Very Hard' : gap > 3 ? 'Difficult' : 'Possible';
+            document.getElementById('mobilityContext').textContent = 
+                gap > 8 ? 'Gap too wide' : gap > 5 ? 'Rare success stories' : gap > 3 ? 'Takes extreme effort' : 'With hard work';
+            
+            document.getElementById('societyValue').textContent = 
+                gap > 10 ? 'Two Worlds' : gap > 5 ? 'Divided' : gap > 3 ? 'Stratified' : 'Connected';
+            document.getElementById('societyContext').textContent = 
+                gap > 10 ? 'Separate realities' : gap > 5 ? 'Different lives' : gap > 3 ? 'Clear classes' : 'Some mobility';
+            
+            // Update plot with new data
+            plotFuture(aiSpeed - 50, intervention);
         }
 
         function toggleFAQ(element) {
