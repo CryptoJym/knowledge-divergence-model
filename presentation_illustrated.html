@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What's Really Happening with AI and Jobs - Illustrated Presentation</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.8;
+        }
+        .slide {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .slide h1 {
+            font-size: 3em;
+            margin-bottom: 0.5em;
+            color: #667eea;
+            text-align: center;
+        }
+        .slide h2 {
+            font-size: 2.2em;
+            margin-bottom: 0.5em;
+            color: #667eea;
+        }
+        .slide p {
+            font-size: 1.4em;
+            line-height: 1.6;
+            margin-bottom: 1em;
+        }
+        .big-number {
+            font-size: 4em;
+            font-weight: bold;
+            color: #e74c3c;
+            display: block;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .key-point {
+            background: linear-gradient(135deg, #f5f7fa 0%, #f0f2ff 100%);
+            border-left: 5px solid #667eea;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+            font-size: 1.3em;
+        }
+        .analogy-box {
+            background: #fff8e1;
+            border: 2px solid #ffc107;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 30px 0;
+            font-size: 1.2em;
+        }
+        .winner-loser-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        .winner-box {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .loser-box {
+            background: #ffebee;
+            border: 2px solid #f44336;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .chart-container {
+            margin: 30px 0;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .nav-button {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
+        .nav-button:hover {
+            background: #5a67d8;
+        }
+        .nav-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .emphasis {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Slide 1: Opening -->
+    <div class="slide" id="slide1">
+        <h1>What's Really Happening with AI and Jobs</h1>
+        <div class="analogy-box fade-in">
+            <p>Imagine if tomorrow, every book and course in the world became free. You'd think everyone would get equally smart, right?</p>
+            <p>That's what people thought would happen with AI.</p>
+            <p><strong>But the numbers show something very different is happening.</strong></p>
+        </div>
+    </div>
+
+    <!-- Slide 2: The Big Picture -->
+    <div class="slide" id="slide2" style="display: none;">
+        <h2>The Real Story</h2>
+        <div class="key-point fade-in">
+            <p>AI is splitting society into two groups, but NOT the way you think:</p>
+            <ul>
+                <li>It's NOT about rich versus poor ❌</li>
+                <li>It's NOT about college versus no college ❌</li>
+                <li>It's about <span class="emphasis">how fast you can adapt to change</span> ✅</li>
+            </ul>
+        </div>
+        <div class="analogy-box fade-in" style="animation-delay: 0.3s;">
+            <p>Think of it like this: When cars were invented, the people who learned to drive quickly got all the good jobs. The people who kept using horses got left behind.</p>
+            <p><strong>But this time, it's happening 100 times faster.</strong></p>
+        </div>
+    </div>
+
+    <!-- Slide 3: Job Losses Chart -->
+    <div class="slide" id="slide3" style="display: none;">
+        <h2>The Jobs Being Lost Right Now</h2>
+        <div class="chart-container fade-in">
+            <div id="jobLossChart"></div>
+        </div>
+        <div class="key-point fade-in" style="animation-delay: 0.3s;">
+            <p><span class="emphasis">230,831 tech workers</span> lost their jobs - that's like firing everyone in a medium-sized city!</p>
+        </div>
+    </div>
+
+    <!-- Slide 4: AI Adoption Speed -->
+    <div class="slide" id="slide4" style="display: none;">
+        <h2>How Fast Things Are Changing</h2>
+        <div class="chart-container fade-in">
+            <div id="adoptionChart"></div>
+        </div>
+        <div class="key-point fade-in" style="animation-delay: 0.3s;">
+            <p>Lawyers went from <span class="emphasis">19% to 79%</span> AI adoption in just ONE YEAR!</p>
+            <p>That's 4 times as many in 12 months!</p>
+        </div>
+    </div>
+
+    <!-- Slide 5: Cost Drop -->
+    <div class="slide" id="slide5" style="display: none;">
+        <h2>Why Anyone Can Now Compete</h2>
+        <div class="big-number fade-in">280x</div>
+        <div class="key-point fade-in" style="animation-delay: 0.3s;">
+            <p>The cost of using AI dropped by 280 times in just 18 months.</p>
+            <p>That's like a <span class="emphasis">$280 tool now costing $1</span>.</p>
+            <p>Anyone with a good idea can now compete with big companies!</p>
+        </div>
+    </div>
+
+    <!-- Slide 6: Winners vs Losers -->
+    <div class="slide" id="slide6" style="display: none;">
+        <h2>Who's Winning and Who's Losing</h2>
+        <div class="winner-loser-grid fade-in">
+            <div class="winner-box">
+                <h3>Winners ✅</h3>
+                <ul>
+                    <li>People who learn new things quickly</li>
+                    <li>People who aren't afraid to try AI tools</li>
+                    <li>People who know their industry well and add AI to it</li>
+                    <li>People with good ideas who use AI to make them happen</li>
+                </ul>
+            </div>
+            <div class="loser-box">
+                <h3>Losers ❌</h3>
+                <ul>
+                    <li>People who say "I've always done it this way"</li>
+                    <li>People who think their degree will protect them</li>
+                    <li>People who refuse to learn new tools</li>
+                    <li>People who only know how to do one thing</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7: Future Impact -->
+    <div class="slide" id="slide7" style="display: none;">
+        <h2>What's Coming by 2030</h2>
+        <div class="chart-container fade-in">
+            <div id="futureChart"></div>
+        </div>
+        <div class="key-point fade-in" style="animation-delay: 0.3s;">
+            <p>In just 5 years:</p>
+            <ul>
+                <li><span class="emphasis">22% of all jobs</span> will change completely</li>
+                <li><span class="emphasis">39% of skills</span> people have today won't matter</li>
+                <li>That's almost HALF of what people know becoming useless!</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Slide 8: The Key Message -->
+    <div class="slide" id="slide8" style="display: none;">
+        <h2>The Most Important Thing to Remember</h2>
+        <div class="key-point fade-in" style="font-size: 1.5em; text-align: center;">
+            <p>The future isn't about <span class="emphasis">humans versus AI</span>.</p>
+            <p>It's about <span class="emphasis">humans who use AI</span> versus <span class="emphasis">humans who don't</span>.</p>
+        </div>
+        <div class="analogy-box fade-in" style="animation-delay: 0.3s;">
+            <p>The gap is real. It's growing. And it's happening faster than most people realize.</p>
+            <p><strong>But you get to choose which side you're on.</strong></p>
+        </div>
+    </div>
+
+    <!-- Slide 9: Call to Action -->
+    <div class="slide" id="slide9" style="display: none;">
+        <h2>What You Can Do Today</h2>
+        <div class="key-point fade-in">
+            <p>Pick one AI tool. Use it for 15 minutes. ChatGPT, Claude, whatever. <strong>Just start.</strong></p>
+        </div>
+        <div class="fade-in" style="animation-delay: 0.3s; text-align: center; font-size: 1.8em; margin-top: 50px;">
+            <p>Because in 5 years, there will be two kinds of people:</p>
+            <p><span class="emphasis">Those who learned to work with AI</span></p>
+            <p>and</p>
+            <p><span class="emphasis">Those who got left behind</span></p>
+            <p style="font-size: 1.5em; margin-top: 30px;"><strong>Which one will you be?</strong></p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="changeSlide(-1)" disabled>Previous</button>
+        <button class="nav-button" id="nextBtn" onclick="changeSlide(1)">Next</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 9;
+
+        function showSlide(n) {
+            // Hide all slides
+            for (let i = 1; i <= totalSlides; i++) {
+                document.getElementById(`slide${i}`).style.display = 'none';
+            }
+            
+            // Show current slide
+            document.getElementById(`slide${n}`).style.display = 'flex';
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = (n === 1);
+            document.getElementById('nextBtn').disabled = (n === totalSlides);
+            
+            // Trigger animations and charts
+            if (n === 3) createJobLossChart();
+            if (n === 4) createAdoptionChart();
+            if (n === 7) createFutureChart();
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            if (currentSlide < 1) currentSlide = 1;
+            if (currentSlide > totalSlides) currentSlide = totalSlides;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        // Chart functions
+        function createJobLossChart() {
+            const data = [{
+                x: ['Tech Workers', 'Journalists', 'Lawyers', 'Design'],
+                y: [230831, 2700, 4200, 5000],
+                type: 'bar',
+                marker: {
+                    color: ['#e74c3c', '#e74c3c', '#e74c3c', '#e74c3c']
+                },
+                text: ['230,831 jobs', '2,700 jobs', '4,200 jobs', '5,000 jobs'],
+                textposition: 'auto',
+            }];
+
+            const layout = {
+                title: 'Jobs Lost to AI (2023-2025)',
+                yaxis: { title: 'Number of Jobs Lost' },
+                font: { size: 16 }
+            };
+
+            Plotly.newPlot('jobLossChart', data, layout, {responsive: true});
+        }
+
+        function createAdoptionChart() {
+            const data = [{
+                x: ['2023', '2024'],
+                y: [19, 79],
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Lawyers Using AI (%)',
+                line: { color: '#667eea', width: 4 },
+                marker: { size: 12 }
+            }];
+
+            const layout = {
+                title: 'AI Adoption Speed - Lawyers',
+                yaxis: { title: 'Percentage Using AI', range: [0, 100] },
+                xaxis: { title: 'Year' },
+                font: { size: 16 },
+                annotations: [{
+                    x: 2024,
+                    y: 79,
+                    text: '4x increase in one year!',
+                    showarrow: true,
+                    arrowhead: 2,
+                    ax: -50,
+                    ay: -40
+                }]
+            };
+
+            Plotly.newPlot('adoptionChart', data, layout, {responsive: true});
+        }
+
+        function createFutureChart() {
+            const data = [{
+                labels: ['Jobs Changing', 'Skills Becoming Obsolete', 'Jobs Staying Same', 'Skills Still Relevant'],
+                values: [22, 39, 78, 61],
+                type: 'pie',
+                hole: .4,
+                marker: {
+                    colors: ['#e74c3c', '#f39c12', '#27ae60', '#3498db']
+                },
+                textinfo: 'label+percent',
+                textposition: 'outside'
+            }];
+
+            const layout = {
+                title: 'Impact by 2030',
+                font: { size: 16 }
+            };
+
+            Plotly.newPlot('futureChart', data, layout, {responsive: true});
+        }
+
+        // Initialize
+        showSlide(1);
+    </script>
+</body>
+</html>
