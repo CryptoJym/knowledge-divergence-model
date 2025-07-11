@@ -2264,13 +2264,18 @@
             document.getElementById('interventionValue').textContent = intText;
             
             // Calculate future outcomes using simulation
-            const customG0 = 0.4 + (aiSpeed / 100) * 0.6; // Map 0-100 to 0.4-1.0
-            const interventionMultiplier = 1 - (intervention / 100) * 0.3; // Interventions reduce gap by up to 30%
+            const customG0 = 0.2 + (aiSpeed / 100) * 0.8; // Map 0-100 to 0.2-1.0
+            
+            // Interventions affect multiple parameters
+            const intEffect = intervention / 100;
             
             // Run simulation to 2030 (6 years)
             const results = simulateKnowledge(6, { 
                 g0: customG0,
-                psiL: params.psiL * interventionMultiplier
+                betaL: params.betaL + (intEffect * 0.3), // Increase low-skill adoption
+                dL: params.dL + (intEffect * 0.3), // Increase learning rate
+                psiL: params.psiL * (1 - intEffect * 0.5), // Reduce saturation
+                etaL: params.etaL + (intEffect * 0.1) // Improve wage growth
             });
             
             // Get final values
