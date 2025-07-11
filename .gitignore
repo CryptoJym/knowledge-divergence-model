@@ -27,3 +27,19 @@ build/
 *.tmp
 *.temp
 .vercel
+
+# Test files
+test-*.js
+debug-*.js
+*-test.js
+*-check.js
+comprehensive-test.js
+fix-and-test.js
+verify-fixes.js
+final-test.js
+final-check.js
+
+# Screenshots and test results
+*.png
+test-report.json
+*-test-results.json
