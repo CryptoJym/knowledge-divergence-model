@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The AI Disruption: Who's Really Winning and Losing</title>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -439,31 +439,31 @@
         </div>
 
         <div class="tabs hidden" id="mainTabs">
-            <div class="tab active" onclick="showTab('story')">
+            <div class="tab active" onclick="showTab('story', event)">
                 The Story
                 <div class="tab-description">What's happening</div>
             </div>
-            <div class="tab" onclick="showTab('see')">
+            <div class="tab" onclick="showTab('see', event)">
                 See It Happen
                 <div class="tab-description">Live visualization</div>
             </div>
-            <div class="tab" onclick="showTab('why')">
+            <div class="tab" onclick="showTab('why', event)">
                 Why It Happens
                 <div class="tab-description">The factors</div>
             </div>
-            <div class="tab" onclick="showTab('future')">
+            <div class="tab" onclick="showTab('future', event)">
                 Future Scenarios
                 <div class="tab-description">What's coming</div>
             </div>
-            <div class="tab" onclick="showTab('visualize3d')">
+            <div class="tab" onclick="showTab('visualize3d', event)">
                 3D Visualization
                 <div class="tab-description">See the divide</div>
             </div>
-            <div class="tab" onclick="showTab('reality')">
+            <div class="tab" onclick="showTab('reality', event)">
                 The Reality
                 <div class="tab-description">No easy fixes</div>
             </div>
-            <div class="tab" onclick="showTab('details')">
+            <div class="tab" onclick="showTab('details', event)">
                 Technical Details
                 <div class="tab-description">For researchers</div>
             </div>
@@ -1088,6 +1088,11 @@
                     <div class="metric-context" id="societyContext">Separate realities</div>
                 </div>
             </div>
+            
+            <!-- Future Visualization Plot -->
+            <div class="plot-container" style="margin-top: 30px;">
+                <div id="futureVisualization"></div>
+            </div>
 
             <h3>Scenario Breakdown</h3>
             
@@ -1505,7 +1510,7 @@
             dL: 0.35,    // Credential defenders resist change
             etaH: 1.20,  // 120%+ gains for AI entrepreneurs
             etaL: -0.07, // 7.25% job losses for traditional roles
-            phiH: 2.80,  // 280x leverage for ambitious outsiders
+            phiH: 1.80,  // 180% leverage for ambitious outsiders
             phiL: 0.50,  // Expertise becoming commodity
             psiH: 1e-4,  // Minimal saturation for adaptable minds
             psiL: 5e-3,  // Quick saturation for rigid thinkers
@@ -1557,8 +1562,8 @@
         };
 
         // Model functions
-        function g(t) {
-            return params.g0 / (1 + Math.exp(-params.sigma * (t - params.t0)));
+        function g(t, g0 = params.g0) {
+            return g0 / (1 + Math.exp(-params.sigma * (t - params.t0)));
         }
 
         function s(K, psi) {
@@ -1593,43 +1598,55 @@
 
             for (let i = 0; i < steps; i++) {
                 const t = 2024 + i * dt;
-                const gt = g(t);
+                const gt = g(t, p.g0);
                 
-                const VH = betaH * p.dH * s(KH, p.psiH) * gt * Math.pow(KH, p.phiH);
-                const VL = betaL * p.dL * s(KL, p.psiL) * gt * Math.pow(KL, p.phiL);
+                // Bound KH and KL to prevent extreme values
+                KH = Math.max(0.1, Math.min(KH, 20));
+                KL = Math.max(0.1, Math.min(KL, 5));
+                
+                // Calculate with bounded power operations
+                const khPower = Math.min(Math.pow(KH, p.phiH), 1000);
+                const klPower = Math.min(Math.pow(KL, p.phiL), 1000);
+                
+                const VH = betaH * p.dH * s(KH, p.psiH) * gt * khPower;
+                const VL = betaL * p.dL * s(KL, p.psiL) * gt * klPower;
+                
+                // Bound velocities to prevent runaway growth
+                const boundedVH = Math.min(Math.max(VH, -10), 10);
+                const boundedVL = Math.min(Math.max(VL, -10), 10);
                 
                 const dgdt = p.g0 * p.sigma * Math.exp(-p.sigma * (t - p.t0)) / 
                             Math.pow(1 + Math.exp(-p.sigma * (t - p.t0)), 2);
                 
-                const AH = betaH * p.dH * s(KH, p.psiH) * gt * Math.pow(KH, p.phiH - 1) * 
-                          (p.phiH * VH + KH * (dgdt / gt - p.psiH * VH));
-                const AL = betaL * p.dL * s(KL, p.psiL) * gt * Math.pow(KL, p.phiL - 1) * 
-                          (p.phiL * VL + KL * (dgdt / gt - p.psiL * VL));
+                const AH = betaH * p.dH * s(KH, p.psiH) * gt * Math.pow(KH, Math.max(0, p.phiH - 1)) * 
+                          (p.phiH * boundedVH + KH * (dgdt / gt - p.psiH * boundedVH));
+                const AL = betaL * p.dL * s(KL, p.psiL) * gt * Math.pow(KL, Math.max(0, p.phiL - 1)) * 
+                          (p.phiL * boundedVL + KL * (dgdt / gt - p.psiL * boundedVL));
                 
                 const JH = (AH - AH_prev) / dt;
                 const JL = (AL - AL_prev) / dt;
                 
-                KH += VH * dt;
-                KL += VL * dt;
+                KH += boundedVH * dt;
+                KL += boundedVL * dt;
                 
-                betaH += p.etaH * 0.01 * dt;
-                betaL += p.etaL * 0.001 * dt;
+                betaH = Math.min(betaH + p.etaH * 0.01 * dt, 2.0);
+                betaL = Math.max(betaL + p.etaL * 0.001 * dt, 0.01);
                 
                 if (i % 20 === 0) {
                     results.t.push(t);
                     results.KH.push(KH);
                     results.KL.push(KL);
-                    results.gap.push(Math.log(KH / KL));
-                    results.VH.push(VH);
-                    results.VL.push(VL);
+                    results.gap.push(Math.log(Math.max(KH / KL, 0.1)));
+                    results.VH.push(boundedVH);
+                    results.VL.push(boundedVL);
                     results.AH.push(AH);
                     results.AL.push(AL);
                     results.JH.push(JH);
                     results.JL.push(JL);
                 }
                 
-                VH_prev = VH;
-                VL_prev = VL;
+                VH_prev = boundedVH;
+                VL_prev = boundedVL;
                 AH_prev = AH;
                 AL_prev = AL;
             }
@@ -1643,8 +1660,14 @@
             
             // Convert abstract knowledge to concrete salary multipliers
             const baseSalary = 50000; // median US salary
-            const eliteSalaries = results.KH.map(k => baseSalary * Math.pow(k, 1.5));
-            const massSalaries = results.KL.map(k => baseSalary * Math.pow(k, 0.8));
+            const eliteSalaries = results.KH.map(k => {
+                const multiplier = Math.min(Math.max(Math.pow(k, 1.5), 1), 50);
+                return baseSalary * multiplier;
+            });
+            const massSalaries = results.KL.map(k => {
+                const multiplier = Math.min(Math.max(Math.pow(k, 0.8), 0.8), 2);
+                return baseSalary * multiplier;
+            });
             const salaryGap = eliteSalaries.map((e, i) => e / massSalaries[i]);
             
             const trace1 = {
@@ -2134,7 +2157,7 @@
         }
 
         // UI interaction functions
-        function showTab(tabName) {
+        function showTab(tabName, evt) {
             // Hide all content
             document.querySelectorAll('.content').forEach(content => {
                 content.classList.add('hidden');
@@ -2149,7 +2172,15 @@
             document.getElementById(tabName).classList.remove('hidden');
             
             // Add active class to selected tab
-            event.target.closest('.tab').classList.add('active');
+            if (evt && evt.target) {
+                evt.target.closest('.tab').classList.add('active');
+            } else {
+                // If no event, find the tab by onclick attribute
+                const tabElement = document.querySelector(`[onclick*="showTab('${tabName}')"]`);
+                if (tabElement) {
+                    tabElement.classList.add('active');
+                }
+            }
             
             // Initialize plots for the selected tab
             switch(tabName) {
@@ -2200,8 +2231,13 @@
             // Update the income displays
             const results = simulateKnowledge(6, { g0: customG0 });
             const baseSalary = 50000;
-            const finalEliteIncome = baseSalary * Math.pow(results.KH[results.KH.length - 1], 1.5);
-            const finalMassIncome = baseSalary * Math.pow(results.KL[results.KL.length - 1], 0.8);
+            const finalKH = results.KH[results.KH.length - 1] || 1;
+            const finalKL = results.KL[results.KL.length - 1] || 1;
+            // Calculate with bounds to prevent NaN but allow variation
+            const eliteMultiplier = Math.min(Math.max(Math.pow(finalKH, 1.5), 1), 50);
+            const massMultiplier = Math.min(Math.max(Math.pow(finalKL, 0.8), 0.8), 2);
+            const finalEliteIncome = baseSalary * eliteMultiplier;
+            const finalMassIncome = baseSalary * massMultiplier;
             const gap = finalEliteIncome / finalMassIncome;
             
             document.getElementById('eliteIncome').textContent = '$' + Math.round(finalEliteIncome).toLocaleString();
@@ -2239,8 +2275,13 @@
             
             // Get final values
             const baseSalary = 50000;
-            const finalEliteIncome = baseSalary * Math.pow(results.KH[results.KH.length - 1], 1.5);
-            const finalMassIncome = baseSalary * Math.pow(results.KL[results.KL.length - 1], 0.8);
+            const finalKH = results.KH[results.KH.length - 1] || 1;
+            const finalKL = results.KL[results.KL.length - 1] || 1;
+            // Calculate with bounds to prevent NaN but allow variation
+            const eliteMultiplier = Math.min(Math.max(Math.pow(finalKH, 1.5), 1), 50);
+            const massMultiplier = Math.min(Math.max(Math.pow(finalKL, 0.8), 0.8), 2);
+            const finalEliteIncome = baseSalary * eliteMultiplier;
+            const finalMassIncome = baseSalary * massMultiplier;
             const gap = finalEliteIncome / finalMassIncome;
             
             // Update visual society
@@ -2315,6 +2356,8 @@
         function skipTour() {
             document.getElementById('welcomeSection').classList.add('hidden');
             document.getElementById('mainTabs').classList.remove('hidden');
+            document.getElementById('tourOverlay').style.display = 'none';
+            document.getElementById('tourPopup').style.display = 'none';
             showTab('story');
         }
 

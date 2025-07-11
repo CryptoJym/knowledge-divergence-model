@@ -18,5 +18,13 @@
     "education"
   ],
   "author": "cryptojym",
-  "license": "MIT"
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cryptojym/knowledge-divergence-model/issues"
+  },
+  "homepage": "https://github.com/cryptojym/knowledge-divergence-model#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.54.1",
+    "playwright": "^1.54.1"
+  }
 }
